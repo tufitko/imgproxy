@@ -37,7 +37,8 @@ var (
 
 	SoReuseport bool
 
-	PathPrefix string
+	PathPrefix     string
+	UseQueryParams bool
 
 	MaxSrcResolution            int
 	MaxSrcFileSize              int
@@ -243,6 +244,7 @@ func Reset() {
 	SoReuseport = false
 
 	PathPrefix = ""
+	UseQueryParams = false
 
 	MaxSrcResolution = 50000000
 	MaxSrcFileSize = 0
@@ -462,6 +464,7 @@ func Configure() error {
 	configurators.Bool(&SoReuseport, "IMGPROXY_SO_REUSEPORT")
 
 	configurators.URLPath(&PathPrefix, "IMGPROXY_PATH_PREFIX")
+	configurators.Bool(&UseQueryParams, "IMGPROXY_USE_QUERY_PARAMS")
 
 	configurators.MegaInt(&MaxSrcResolution, "IMGPROXY_MAX_SRC_RESOLUTION")
 	configurators.Int(&MaxSrcFileSize, "IMGPROXY_MAX_SRC_FILE_SIZE")

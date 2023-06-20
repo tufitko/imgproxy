@@ -645,6 +645,18 @@ func (s *ProcessingOptionsTestSuite) TestParseBase64URLOnlyPresets() {
 	s.Require().Equal(originURL, imageURL)
 }
 
+func (s *ProcessingOptionsTestSuite) TestUseQueryParams() {
+	config.UseQueryParams = true
+	originURL := "http://images.dev/lorem/ipsum.jpg?param=value"
+	path := fmt.Sprintf("/%s?size=100:100&strip_metadata=true", base64.RawURLEncoding.EncodeToString([]byte(originURL)))
+	po, imageURL, err := ParsePath(path, make(http.Header))
+
+	s.Require().NoError(err)
+	s.Require().Equal(originURL, imageURL)
+	s.Require().Equal(imagetype.Unknown, po.Format)
+	s.Require().True(po.StripMetadata)
+}
+
 func TestProcessingOptions(t *testing.T) {
 	suite.Run(t, new(ProcessingOptionsTestSuite))
 }

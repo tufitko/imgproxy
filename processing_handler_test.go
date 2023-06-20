@@ -756,6 +756,22 @@ func (s *ProcessingHandlerTestSuite) TestAlwaysRasterizeSvgDisabled() {
 	s.Require().Equal("image/svg+xml", res.Header.Get("Content-Type"))
 }
 
+func (s *ProcessingHandlerTestSuite) TestQueryParams() {
+	config.UseQueryParams = true
+	rw := s.send("/unsafe/plain/local:///test1.png?rs=fill:4:4")
+	res := rw.Result()
+
+	s.Require().Equal(200, res.StatusCode)
+	s.Require().Equal("image/png", res.Header.Get("Content-Type"))
+
+	meta, err := imagemeta.DecodeMeta(res.Body)
+
+	s.Require().NoError(err)
+	s.Require().Equal(imagetype.PNG, meta.Format())
+	s.Require().Equal(4, meta.Width())
+	s.Require().Equal(4, meta.Height())
+}
+
 func (s *ProcessingHandlerTestSuite) TestAlwaysRasterizeSvgWithFormat() {
 	config.AlwaysRasterizeSvg = true
 	config.SkipProcessingFormats = []imagetype.Type{imagetype.SVG}
